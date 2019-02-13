@@ -3,12 +3,86 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Screen</title>
+
+    <title>MineSweeper</title>
+    
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css">
-    <script src="main.js"></script>
+    <style type="text/css">
+        .menu_margin { margin-bottom: 5px; } /* force margins around the menu title */
+		.menu_title { font-family: helvetica; font-size: 12px; }
+		.menu_dropdown { position:absolute; visibility: hidden; width:150px; top:30px; z-index:5; }
+		a { text-decoration: none; cursor: default; } /* Remove underline from menus */
+		a:link, a:visited, a:active { color: #000; }
+		a:hover { color: #00C; }
+		.menu_item { font-family: helvetica; font-size: 12px; }
+		.menu_divider { font-family: helvetica; font-size: 2px; }
+    </style>
+    <script type="text/javascript" src="main.js"></script>
 </head>
-<body>
-    <canvas id="canvas" width="1000" height="500"></canvas>
+<body bgcolor="#C0C0C0">
+
+    <!-- Menu Bar -->
+    <table width="150" border="0" cellspacing="0" cellpadding="0"  class="menu_margin">
+        <tr>
+            <td width="43" class="menu_title"><a onclick= "clickMenu('divMenuGame')">Game</a></td>
+        </tr>
+    </table>
+    <!-- Game Menu -->
+    <div id="divMenuGame" class="menu_dropdown" style="left:10px;", >
+        <table border="1" bgcolor="#C0C0C0" class="dropdown">
+            <tr>
+                <td class="menu_item" nowrap="nowrap">
+                    <img src="images/notchecked.gif" width="10" height="10" name="New"/>
+                    <a onclick=>New &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; F2</a><br>
+                    <img src="images/notchecked.gif" width="10" height="10" name="Pause"/>
+                    <a onclick=>Pause&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; P</a><br>
+                    <hr>
+                    <img src="images/checked.gif" width="10" height="10" name="Beginner" id = "beginner">
+                    <a onclick= "setChecks('beginner')">Beginner</a><br>
+                    <img src="images/notchecked.gif" width="10" height="10" name="Intermediate" id = "intermediate">
+                    <a onclick= "setChecks('intermediate')">Intermediate</a><br>
+                    <img src="images/notchecked.gif" width="10" height="10" name="Expert" id = "expert">
+                    <a onclick= "setChecks('expert')">Expert</a><br>
+                    <img src="images/notchecked.gif" width="10" height="10" name="Custom" id = "gamecustom">
+                    <a onclick="setChecks('gamecustom')">Custom</a><br>
+                    <hr>
+                    <img src="images/notchecked.gif" width="10" height="10" name="Exit" >
+                    <a onclick= >Exit</a><br>
+                </td>
+            </tr>
+        </table>
+    </div>
+<!-- functions for the drop down game menu -->
+<script>
+    //bool to help the menu open and close        
+    let isOpen = false;
+    function clickMenu(thisMenu)
+    {
+        // if the menu is closed open on click
+        if(!isOpen)
+        {
+            document.getElementById(thisMenu).style.visibility ="visible";
+            isOpen = true;
+        }
+        //if the menu is open close on click
+        else{
+            document.getElementById(thisMenu).style.visibility = "hidden"
+            isOpen = false;
+        }
+    }
+
+    function setChecks(gameMode)
+    {
+        // reset all check marks
+        document.Beginner.src = "images/notchecked.gif";
+        document.Intermediate.src = "images/notchecked.gif";
+        document.Expert.src = "images/notchecked.gif";
+        document.Custom.src = "images/notchecked.gif";
+        //set the new check mark on clicked game mode
+        document.getElementById(gameMode).src = "images/checked.gif";
+    }
+</script>
+
+    <!-- Game Board -->
 </body>
 </html>
