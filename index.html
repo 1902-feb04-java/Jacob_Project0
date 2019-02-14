@@ -33,7 +33,7 @@
         <tr>
             <td class="menu_item" nowrap="nowrap">
                 <img src="images/notchecked.gif" width="10" height="10" name="New"/>
-                <a onclick=>New &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; F2</a><br>
+                <a onclick= "newGame('default')">New &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; F2</a><br>
                 <img src="images/notchecked.gif" width="10" height="10" name="Pause"/>
                 <a onclick=>Pause&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; P</a><br>
                 <hr>
@@ -79,7 +79,7 @@
 
     function newGame()
     {
-
+        menuClicked(difficulty);
     }
 
     function setChecks(gameMode)
@@ -99,9 +99,10 @@
 
 
 // board variables
-var mines=10;
-var rows=8; 
-var columns=8;
+var difficulty = 'default';
+var mines;
+var rows; 
+var columns;
 var remaining = mines;
 var tile=[];
 var border = [];
@@ -109,10 +110,15 @@ var board=[];
 var revealed=0;
 function menuClicked(gameMode)
 {
+    //make sure there is no current game board and destroy the current one if there is
+    destroyBoard();
+    //change which game mode is selected in the menu
     setChecks(gameMode);
-
+    //change the board size based on game mode
+    setDifficulty(gameMode);
+    //build the game board
     build();
-
+    //close the game menu
     closeMenu();
 }
 
@@ -126,8 +132,33 @@ function check(x1, y1)
     }
 }
 
+function setDifficulty(gameMode)
+{
+    difficulty = gameMode;
+
+    if (difficulty === 'beginner' || difficulty === "default")
+    {
+        rows = 8;
+        columns = 8;
+        mines = 10;
+    }
+    else if( difficulty === 'intermediate')
+    {
+        rows = 16;
+        columns = 16;
+        mines = 40;
+    }
+    else if (difficulty === 'expert')
+    {
+        rows = 24;
+        columns = 24;
+        mines = 99;
+    }
+}
+
 //build the board
-function build()        
+function build()
+        
 {
     //create the tiles
     for (var i=0; i < rows * columns; i++)
@@ -182,6 +213,20 @@ function build()
         }
     }
 
+}
+
+function destroyBoard()
+{
+    if(tile.length > 0)
+    {
+        for(var i = 0; i < rows*columns; i++)
+        {
+            document.getElementById(i).remove(tile[i]);
+        }
+    }
+    else{
+        return;
+    }
 }
 </script>
 
