@@ -21,37 +21,37 @@
 </head>
 <body bgcolor="#C0C0C0">
 
-    <!-- Menu Bar -->
-    <table width="150" border="0" cellspacing="0" cellpadding="0"  class="menu_margin">
+<!-- Menu Bar -->
+<table width="150" border="0" cellspacing="0" cellpadding="0"  class="menu_margin">
+    <tr>
+        <td width="43" class="menu_title"><a onclick= "clickMenu('divMenuGame')">Game</a></td>
+    </tr>
+</table>
+<!-- Game Menu -->
+<div id="divMenuGame" class="menu_dropdown" style="left:10px;", >
+    <table border="1" bgcolor="#C0C0C0" class="dropdown">
         <tr>
-            <td width="43" class="menu_title"><a onclick= "clickMenu('divMenuGame')">Game</a></td>
+            <td class="menu_item" nowrap="nowrap">
+                <img src="images/notchecked.gif" width="10" height="10" name="New"/>
+                <a onclick=>New &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; F2</a><br>
+                <img src="images/notchecked.gif" width="10" height="10" name="Pause"/>
+                <a onclick=>Pause&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; P</a><br>
+                <hr>
+                <img src="images/checked.gif" width="10" height="10" name="Beginner" id = "beginner">
+                <a onclick= "menuClicked('beginner')">Beginner</a><br>
+                <img src="images/notchecked.gif" width="10" height="10" name="Intermediate" id = "intermediate">
+                <a onclick= "menuClicked('intermediate')">Intermediate</a><br>
+                <img src="images/notchecked.gif" width="10" height="10" name="Expert" id = "expert">
+                <a onclick= "menuClicked('expert')">Expert</a><br>
+                <img src="images/notchecked.gif" width="10" height="10" name="Custom" id = "gamecustom">
+                <a onclick="menuClicked('gamecustom')">Custom</a><br>
+                <hr>
+                <img src="images/notchecked.gif" width="10" height="10" name="Exit" >
+                <a onclick= >Exit</a><br>
+            </td>
         </tr>
     </table>
-    <!-- Game Menu -->
-    <div id="divMenuGame" class="menu_dropdown" style="left:10px;", >
-        <table border="1" bgcolor="#C0C0C0" class="dropdown">
-            <tr>
-                <td class="menu_item" nowrap="nowrap">
-                    <img src="images/notchecked.gif" width="10" height="10" name="New"/>
-                    <a onclick=>New &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; F2</a><br>
-                    <img src="images/notchecked.gif" width="10" height="10" name="Pause"/>
-                    <a onclick=>Pause&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; P</a><br>
-                    <hr>
-                    <img src="images/checked.gif" width="10" height="10" name="Beginner" id = "beginner">
-                    <a onclick= "setChecks('beginner')">Beginner</a><br>
-                    <img src="images/notchecked.gif" width="10" height="10" name="Intermediate" id = "intermediate">
-                    <a onclick= "setChecks('intermediate')">Intermediate</a><br>
-                    <img src="images/notchecked.gif" width="10" height="10" name="Expert" id = "expert">
-                    <a onclick= "setChecks('expert')">Expert</a><br>
-                    <img src="images/notchecked.gif" width="10" height="10" name="Custom" id = "gamecustom">
-                    <a onclick="setChecks('gamecustom')">Custom</a><br>
-                    <hr>
-                    <img src="images/notchecked.gif" width="10" height="10" name="Exit" >
-                    <a onclick= >Exit</a><br>
-                </td>
-            </tr>
-        </table>
-    </div>
+</div>
 <!-- functions for the drop down game menu -->
 <script>
     //bool to help the menu open and close        
@@ -71,6 +71,17 @@
         }
     }
 
+    function closeMenu()
+    {
+        document.getElementById('divMenuGame').style.visibility = 'hidden';
+        isOpen = false;
+    }
+
+    function newGame()
+    {
+
+    }
+
     function setChecks(gameMode)
     {
         // reset all check marks
@@ -84,5 +95,95 @@
 </script>
 
     <!-- Game Board -->
+<script type='text/javascript'>
+
+
+// board variables
+var mines=10;
+var rows=8; 
+var columns=8;
+var remaining = mines;
+var tile=[];
+var border = [];
+var board=[];
+var revealed=0;
+function menuClicked(gameMode)
+{
+    setChecks(gameMode);
+
+    build();
+
+    closeMenu();
+}
+
+// check the coordinate of the tile
+function check(x1, y1)
+{
+    //is the tile in the board
+    if((x1>=0)&&(y1>=0)&&(x1<columns)&&(y1<rows))
+    { 
+        return board[x1+y1*columns];
+    }
+}
+
+//build the board
+function build()        
+{
+    //create the tiles
+    for (var i=0; i < rows * columns; i++)
+    {
+    //create the tile image
+    tile[i] = document.createElement('img');
+    tile[i].src="images/blank.gif";
+    tile[i].style="position:absolute; height:20px; width: 20px";
+    //place the tiles
+    tile[i].style.top=75+Math.floor(i/columns)*20;
+    tile[i].style.left=50+i%columns*20;
+    //add ability to be clicked
+    //tile[i].addEventListener('mousedown', click);
+    tile[i].id=i;
+    document.body.appendChild(tile[i]);  
+    }
+
+    // Place the mines
+    var placed=0;
+    do
+    {
+        // pick random tile
+        i = Math.floor(Math.random()*columns*rows);
+
+        // check for already placed mine
+        if (board[i]!='mine')
+            {
+            // set the mine
+            board[i]='mine';
+            placed++;
+            }        
+    } while (placed<mines);
+
+    //check neighbor tiles for mines
+    for(var x=0;x<columns;x++)//columns
+    {
+        for(y=0;y<rows+1;y++) //rows
+        {
+            if(check(x,y)!='mine') //if the cell is not a mine:
+            {
+                // the value of the cell is the sum of mines in the eight neighboring tiles:
+                board[x+y*columns]= 
+                ((check(x,y+1)=='mine')|0) //bottom
+                +((check(x-1,y+1)=='mine')|0)//bottom left
+                +((check(x+1,y+1)=='mine')|0)//bottom right
+                +((check(x,y-1)=='mine')|0)//top
+                +((check(x-1,y-1)=='mine')|0)//top left
+                +((check(x+1,y-1)=='mine')|0)//top right
+                +((check(x-1,y)=='mine')|0)//left
+                +((check(x+1,y)=='mine')|0);//right
+            }
+        }
+    }
+
+}
+</script>
+
 </body>
 </html>
