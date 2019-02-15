@@ -160,6 +160,7 @@ function setDifficulty(gameMode)
 function build()
         
 {
+    console.clear();
     //create the tiles
     for (var i=0; i < rows * columns; i++)
     {
@@ -173,7 +174,8 @@ function build()
     //add ability to be clicked
     //tile[i].addEventListener('mousedown', click);
     tile[i].id=i;
-    document.body.appendChild(tile[i]);  
+    document.body.appendChild(tile[i]);
+    console.log(tile[i].x +' , ' + tile[i].y);
     }
 
     // Place the mines
@@ -226,6 +228,25 @@ function destroyBoard()
     }
     else{
         return;
+    }
+}
+
+function click(event)
+{
+    var source = event.target;
+    var id = source.id;
+
+    if(event.which === 3)
+    {
+        switch(picture(id))
+        {
+            case 'blank' :tile[id].src = 'bombflagged.gif',remaining--;
+            break;
+            case 'bombflagged' :tile[id].src = 'bombquestioned.gif', remaining++;
+            break;
+            case 'bombquestioned' :tile[id].src = 'blank.gif';
+            break;
+        }
     }
 }
 </script>
