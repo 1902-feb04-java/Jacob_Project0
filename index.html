@@ -104,11 +104,18 @@ var mines;
 var rows; 
 var columns;
 var remaining = mines;
-var tile=[];
+var tile = [];
 var border = [];
-var board=[];
-var revealed=0;
+var board = [];
+var timeDigits = [];
+var tstr;
+var revealed = 0;
 var status;
+var smile;
+var count;
+var clock;
+var clockGo = false;
+
 function menuClicked(gameMode)
 {
     //make sure there is no current game board and destroy the current one if there is
@@ -168,10 +175,10 @@ function build()
     //create the tile image
     tile[i] = document.createElement('img');
     tile[i].src="images/blank.gif";
-    tile[i].style="position:absolute; height:20px; width: 20px";
+    tile[i].style="position:absolute; height:30px; width: 30px";
     //place the tiles
-    tile[i].style.top=75+Math.floor(i/columns)*20;
-    tile[i].style.left=50+i%columns*20;
+    tile[i].style.top=75+Math.floor(i/columns)*30;
+    tile[i].style.left=50+i%columns*30;
     //add ability to be clicked
     tile[i].addEventListener('mousedown', click);
     tile[i].addEventListener('contextmenu', (e)=>{
@@ -181,6 +188,23 @@ function build()
     document.body.appendChild(tile[i]);
     //console.log(tile[i].x +' , ' + tile[i].y);
     }
+    smile = document.createElement('img');
+    smile.src = "images/facesmile.gif";
+    smile.style = "position:absolute; height:30px; width: 30px";
+    smile.style.top = 30;
+    smile.style.left = (tile[0].x+tile[rows-1].x)/2;
+    document.body.appendChild(smile);
+    smile.id = 1441;
+    smile.addEventListener('mousedown',newGame);
+
+    for (l=0; l <= 9; l++) 
+    {
+        timeDigits[l] = new Image(23,13);
+        tstr = "images/time" + l + ".gif";
+        timeDigits[l].src = tstr; }
+        timeNeg = new Image(23,13);
+        timeNeg.src = "images/time-.gif";
+    
 
     // Place the mines
     var placed=0;
@@ -229,11 +253,13 @@ function destroyBoard()
         {
             document.getElementById(i).remove(tile[i]);
         }
+        document.getElementById(1441).remove(smile);
         board = [];
         rows = 0;
         columns = 0;
         mines = 0;
         remaining = 0;
+        revealed = 0;
         status = 'alive';
     }
     else{
@@ -254,7 +280,7 @@ function click(event)
 {
     var source = event.target;
     var id = source.id;
-    if(status !== 'dead')
+    if(status !== 'dead' && status !== 'win')
     {
         if(event.which === 3)
         {
@@ -282,18 +308,29 @@ function click(event)
                 for(var i=0; i<rows*columns;i++)
                 {
                     status = 'dead';
+                    smile.src = "images/facedead.gif";
                     if(board[i]=='mine'){tile[i].src = 'images/bombrevealed.gif';}
                     if(board[i]!='mine'&&picture(i,'images/bombflagged.gif')){tile[i].src = 'images/bombmisflagged.gif';}
                 }
                 tile[id].src = 'images/bombdeath.gif';
 
             }
-            else{
-                
-                    console.log('not bomb');
-                    console.log(picture(id));
+            else
+            {
                     reveal(id);
-                
+            }
+
+            if(revealed===tile.length-mines)
+            {
+                status = 'win';
+                smile.src = "images/facewin.gif";
+                for(var i=0; i<rows*columns;i++)
+                {
+                    if(board[i]=='mine'&&picture(i,'images/blank.gif'))
+                    {
+                        tile[i].src = 'images/bombflagged.gif';
+                    }
+                }
             }
         }
     }
@@ -304,7 +341,6 @@ function reveal(index)
     if(board[index] != 'mine' && picture(index,'images/blank.gif'))
     {
         revealed++;
-        
         var x=index%columns;
         var y=Math.floor(index/columns);
         if(board[index]==0)
@@ -332,6 +368,8 @@ function reveal(index)
             case 7:tile[index].src = 'images/open7.gif'; break;
             case 8:tile[index].src = 'images/open8.gif'; break;
         }
+        console.clear();
+        console.log(revealed);
     }
 }
 </script>
