@@ -129,6 +129,7 @@ var tstr;
 var revealed = 0;
 var status;
 var smile;
+var smileOn = false;
 var count;
 var clock;
 var clockGo = false;
@@ -137,8 +138,11 @@ var rightBorder = [];
 
 function menuClicked(gameMode)
 {
+    if(tile.length > 1)
+    {
     //make sure there is no current game board and destroy the current one if there is
     destroyBoard();
+    }
     //change which game mode is selected in the menu
     setChecks(gameMode);
     //change the board size based on game mode
@@ -221,6 +225,7 @@ function build()
     document.body.appendChild(smile);
     smile.id = 1441;
     smile.addEventListener('mousedown',newGame);
+    smileOn = true;
 
     // let lefty = 45;
     // let righty = 45;
@@ -305,7 +310,11 @@ function destroyBoard()
         //     document.getElementById(5000+i).remove(leftBorder[i]);
         //     document.getElementById(7000+i).remove(rightBorder[i]);
         // }
-        document.getElementById(1441).remove(smile);
+        if (smileOn === true)
+        {
+            document.getElementById(1441).remove(smile);
+            smileOn=false;
+        }
         board = [];
         rows = 0;
         columns = 0;
@@ -328,6 +337,10 @@ document.addEventListener('submit', event => {
 });
 function customGame()
 {
+    if(tile.length > 0)
+    {
+        destroyBoard();
+    }
     closeMenu();
     document.getElementById('customInput').style.visibility = 'visible';
     setChecks('custom');
