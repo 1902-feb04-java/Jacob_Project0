@@ -6,6 +6,8 @@
     font-family: helvetica; 
     font-size: 25px; }
 
+.custom_Input {
+    font-family: helvetica;}
 a { 
     text-decoration: none; 
     cursor: default;
