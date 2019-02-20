@@ -115,6 +115,8 @@ var smile;
 var count;
 var clock;
 var clockGo = false;
+var leftBorder = [];
+var rightBorder = [];
 
 function menuClicked(gameMode)
 {
@@ -192,10 +194,32 @@ function build()
     smile.src = "images/facesmile.gif";
     smile.style = "position:absolute; height:30px; width: 30px";
     smile.style.top = 30;
-    smile.style.left = (tile[0].x+tile[rows-1].x)/2;
+    smile.style.left = (tile[rows].x+tile[rows-1].x)/2;
     document.body.appendChild(smile);
     smile.id = 1441;
     smile.addEventListener('mousedown',newGame);
+
+    // let lefty = 45;
+    // let righty = 45;
+    // let rightx = tile[rows*columns-1].x+30;
+    // for(var i = 0; i< rows; i++)
+    // {
+    //     leftBorder[i] = document.createElement('img');
+    //     leftBorder[i].src='images/borderlr2.gif';
+    //     leftBorder[i].style = 'position:absolute; height:30px, width:30px';
+    //     leftBorder[i].style.top = lefty+=30;
+    //     leftBorder[i].style.left = tile[0].x-20;
+    //     leftBorder[i].id = 5000 + i;
+    //     document.body.appendChild(leftBorder[i]);
+
+    //     rightBorder[i] = document.createElement('img');
+    //     rightBorder[i].src = 'images/borderlr2.gif';
+    //     rightBorder[i].style = 'position:absolute; height:30px, width:30px';
+    //     rightBorder[i].style.top = righty+=30;
+    //     rightBorder[i].style.left = rightx;
+    //     rightBorder[i].id = 7000+i;
+    //     document.body.appendChild(rightBorder[i]);
+    // }
 
     for (l=0; l <= 9; l++) 
     {
@@ -253,6 +277,11 @@ function destroyBoard()
         {
             document.getElementById(i).remove(tile[i]);
         }
+        for( var i = 0; i< leftBorder.length; i++)
+        {
+            document.getElementById(5000+i).remove(leftBorder[i]);
+            document.getElementById(7000+i).remove(rightBorder[i]);
+        }
         document.getElementById(1441).remove(smile);
         board = [];
         rows = 0;
@@ -261,6 +290,8 @@ function destroyBoard()
         remaining = 0;
         revealed = 0;
         status = 'alive';
+        leftBorder = [];
+        rightBorder=[];
     }
     else{
         return;
